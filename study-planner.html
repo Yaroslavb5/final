@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>study-planner</title>
+    <link rel="stylesheet" type="text/css" media="(max-width:1980px)" href="style.css" />
+    <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+</head>
+<body>
+    <header>
+      <center style="font-size: 45px;">Учебный планер</h1></center>
+    <center>
+    <div class="tab">
+        <button style="margin-left: 0px;" class="tablinks" onclick="openTab(event, 'Schedule')">Расписание</button>
+        <button style="margin-left: 0px;" class="tablinks" onclick="openTab(event, 'Tasks')">Задачи</button>
+        <button style="margin-left: 0px;" class="tablinks" onclick="openTab(event, 'Events')">События</button>
+    </div>
+    </center>
+    </header>
+    <div id="Schedule" class="tabcontent">
+      <h2 style="left: 7px; font-size: 30px; bottom: 5%;">Расписание</h2>
+      <h3 style="left: 7px; bottom: 0;">Ведите свои занятия</h3>
+      <div class="weeks">
+        <div class="weekdays">
+        <h4>Понедельник</h4>
+        <div id="schedule-bar-monday"></div>
+        </div>
+        <div class="weekdays">
+        <h4>Вторник</h4>
+        <div id="schedule-bar-tuesday"></div>
+        </div>
+        <div class="weekdays">
+        <h4>Среда</h4>
+        <div id="schedule-bar-wednesday"></div>
+        </div>
+        <div class="weekdays">
+        <h4>Четверг</h4>
+        <div id="schedule-bar-thursday"></div>
+        </div>
+        <div class="weekdays">
+        <h4>Пятница</h4>
+        <div id="schedule-bar-friday"></div>
+        </div>
+        <div class="weekdays">
+        <h4>Суббота</h4>
+        <div id="schedule-bar-saturday"></div>
+        </div>
+      </div>
+    </div>
+      <div id="Tasks" class="tabcontent">
+        <h2 style="position: relative; left: 7px; font-size: 30px;">Задачи</h2>
+        <h3 style="position: relative; left: 7px;">Введите свои задания</h3>
+      <div class="weeks">
+        <div class="weekdays">
+        <h4>Понедельник</h4>
+        <div id="task-bar-monday"></div>
+        </div>
+        <div class="weekdays">
+        <h4>Вторник</h4>
+        <div id="task-bar-tuesday"></div>
+        </div>
+        <div class="weekdays">
+        <h4>Среда</h4>
+        <div id="task-bar-wednesday"></div>
+        </div>
+        <div class="weekdays">
+        <h4>Четверг</h4>
+        <div id="task-bar-thursday"></div>
+        </div>
+        <div class="weekdays">
+        <h4>Пятница</h4>
+        <div id="task-bar-friday"></div>
+        </div>
+        <div class="weekdays">
+        <h4>Суббота</h4>
+        <div id="task-bar-saturday"></div>
+        </div>
+      </div> 
+      </div>
+      
+      <div id="Events" class="tabcontent">
+        <h2 style="position: relative; left: 7px; font-size: 30px;">События</h2>
+        <h3 style="position: relative; left: 7px;">Введите ближайшие контрольные и события</h3>
+        <div class="weeks">
+          <div class="weekdays">
+          <h4>Понедельник</h4>
+          <div id="events-bar-monday"></div>
+          </div>
+          <div class="weekdays">
+          <h4>Вторник</h4>
+          <div id="events-bar-tuesday"></div>
+          </div>
+          <div class="weekdays">
+          <h4>Среда</h4>
+          <div id="events-bar-wednesday"></div>
+          </div>
+          <div class="weekdays">
+          <h4>Четверг</h4>
+          <div id="events-bar-thursday"></div>
+          </div>
+          <div class="weekdays">
+          <h4>Пятница</h4>
+          <div id="events-bar-friday"></div>
+          </div>
+          <div class="weekdays">
+          <h4>Суббота</h4>
+          <div id="events-bar-saturday"></div>
+          </div>
+        </div> 
+        <div id="event-bar"></div>
+      </div>
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+    </script>
+    <script type="text/babel">
+       function Todo({ todo, index, removeTodo }) {
+  return (
+    <div
+      className="todo"
+    >
+      {todo.text}
+      <div className="weekbut">
+        <button onClick={() => removeTodo(index)}><img src="delete_button.jpg"/></button>
+      </div>
+    </div>
+  );
+}
+
+function TodoForm({ addTodo }) {
+  const [value, setValue] = React.useState("");
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    if (!value) return;
+    addTodo(value);
+    setValue("");
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        className="input"
+        value={value}
+        onChange={e => setValue(e.target.value)}
+      />
+    </form>
+  );
+}
+
+function App() {
+  const [todos, setTodos] = React.useState([
+    {
+      text: "Пример 1"
+    },
+    {
+      text: "Пример 2"
+    },
+    {
+      text: "Пример 3"
+    }
+  ]);
+
+  const addTodo = text => {
+    const newTodos = [...todos, { text }];
+    setTodos(newTodos);
+  };
+
+  const completeTodo = index => {
+    const newTodos = [...todos];
+    newTodos[index].isCompleted = true;
+    setTodos(newTodos);
+  };
+
+  const removeTodo = index => {
+    const newTodos = [...todos];
+    newTodos.splice(index, 1);
+    setTodos(newTodos);
+  };
+
+  return (
+    <div className="app">
+      <div className="todo-list">
+        {todos.map((todo, index) => (
+          <Todo
+            key={index}
+            index={index}
+            todo={todo}
+            completeTodo={completeTodo}
+            removeTodo={removeTodo}
+          />
+        ))}
+        <TodoForm addTodo={addTodo} />
+      </div>
+    </div>
+  );
+}
+ReactDOM.render(
+    <App />,
+    document.getElementById('schedule-bar-monday')
+  );
+  ReactDOM.render(
+    <App />,
+    document.getElementById('schedule-bar-tuesday')
+  );
+  ReactDOM.render(
+    <App />,
+    document.getElementById('schedule-bar-wednesday')
+  );
+  ReactDOM.render(
+    <App />,
+    document.getElementById('schedule-bar-thursday')
+  );
+  ReactDOM.render(
+    <App />,
+    document.getElementById('schedule-bar-friday')
+  );
+  ReactDOM.render(
+    <App />,
+    document.getElementById('schedule-bar-saturday')
+  );
+  ReactDOM.render(
+    <App />,
+    document.getElementById('task-bar-monday')
+  );
+  ReactDOM.render(
+    <App />,
+    document.getElementById('task-bar-tuesday')
+  );
+  ReactDOM.render(
+    <App />,
+    document.getElementById('task-bar-wednesday')
+  );
+  ReactDOM.render(
+    <App />,
+    document.getElementById('task-bar-thursday')
+  );
+  ReactDOM.render(
+    <App />,
+    document.getElementById('task-bar-friday')
+  );
+  ReactDOM.render(
+    <App />,
+    document.getElementById('task-bar-saturday')
+  );
+  ReactDOM.render(
+    <App />,
+    document.getElementById('events-bar-monday')
+  );
+  ReactDOM.render(
+    <App />,
+    document.getElementById('events-bar-tuesday')
+  );
+  ReactDOM.render(
+    <App />,
+    document.getElementById('events-bar-wednesday')
+  );
+  ReactDOM.render(
+    <App />,
+    document.getElementById('events-bar-thursday')
+  );
+  ReactDOM.render(
+    <App />,
+    document.getElementById('events-bar-friday')
+  );
+  ReactDOM.render(
+    <App />,
+    document.getElementById('events-bar-saturday')
+  );
+  
+    </script>
+</body>
+</html>
